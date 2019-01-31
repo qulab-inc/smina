@@ -696,7 +696,7 @@ struct atom_type_vdw: public atom_type_base
 		name = std::string("atom_type_vdw(t1="+name1+",t2="+name2+", i="
 		        + to_string(i) + ",_j=" + to_string(j) + ",_s="
 				+ to_string(smoothing) + ",_^=" + to_string(cap) + ",_c="
-				+ to_string(cutoff) + ")";
+				+ to_string(cutoff) + ")");
 		rexpr.assign("atom_type_vdw\\(t1=(\\S+),t2=(\\S+),i=(\\S+),_j=(\\S+),_s=(\\S+),_\\^=(\\S+),_c=(\\S+)\\)",boost::regex::perl);
 	}
 	fl eval(smt t1, smt t2, fl r) const
@@ -1085,7 +1085,7 @@ struct term_creators : public std::vector<term*> {
 		push_back(new atom_type_linear());
 		push_back(new atom_type_quadratic());
 		push_back(new atom_type_inverse_power<0>());
-		push_back(new atom_type_vdw());
+		push_back(new atom_type_vdw<6,12>());
 
 		push_back(new num_tors_add());
 		push_back(new num_tors_sqr());
