@@ -687,33 +687,31 @@ struct atom_type_linear: public atom_type_base
 template<unsigned i, unsigned j>
 struct atom_type_vdw: public atom_type_base
 {
+	fl d0;
 	fl smoothing;
 	fl cap;
 
-	atom_type_vdw(const std::string& n1="", const std::string& n2="", fl smoothing_=1, fl cap_=100, fl cutoff_=8) :
-		atom_type_base(n1, n2, cutoff_), smoothing(smoothing_), cap(cap_)
+	atom_type_vdw(const std::string& n1="", const std::string& n2="", fl smoothing_=1, fl d0_=1, fl cap_=100, fl cutoff_=8) :
+		atom_type_base(n1, n2, cutoff_), smoothing(smoothing_), d0(d0_), cap(cap_)
 	{
 		name = std::string("atom_type_vdw(t1="+name1+",t2="+name2+", i="
 		        + to_string(i) + ",_j=" + to_string(j) + ",_s="
-				+ to_string(smoothing) + ",_^=" + to_string(cap) + ",_c="
-				+ to_string(cutoff) + ")");
-		rexpr.assign("atom_type_vdw\\(t1=(\\S+),t2=(\\S+),i=(\\S+),_j=(\\S+),_s=(\\S+),_\\^=(\\S+),_c=(\\S+)\\)",boost::regex::perl);
+				+ to_string(smoothing) + ",_d0=" + to_string(d0) + ",_^="
+                                + to_string(cap) + ",_c=" + to_string(cutoff) + ")");
+		rexpr.assign("atom_type_vdw\\(t1=(\\S+),t2=(\\S+),i=(\\S+),_j=(\\S+),_s=(\\S+),_d0=(\\S+),_\\^=(\\S+),_c=(\\S+)\\)",boost::regex::perl);
 	}
 	fl eval(smt t1, smt t2, fl r) const
 	{
 		if (types_match(t1, t2)) 
 		{
-			fl d0 = optimal_distance(t1, t2);
-			fl depth = 1;
-			fl c_i = 0;
-			fl c_j = 0;
-			find_vdw_coefficients<i, j>(d0, depth, c_i, c_j);
-			if (r > d0 + smoothing)
-				r -= smoothing;
-			else if (r < d0 - smoothing)
-				r += smoothing;
-			else
-				r = d0;
+			fl c_i = -2 * int_pow<i>(d0);
+			fl c_j = int_pow<j>(d0);
+     			if (r > d0 + smoothing)
+     				r -= smoothing;
+     			else if (r < d0 - smoothing)
+     				r += smoothing;
+     			else
+     				r = d0;
 
 			fl r_i = int_pow<i>(r);
 			fl r_j = int_pow<j>(r);
@@ -735,12 +733,13 @@ struct atom_type_vdw: public atom_type_base
 		fl vi = boost::lexical_cast<fl>(match[3]);
 		fl vj = boost::lexical_cast<fl>(match[4]);
 		fl s = boost::lexical_cast<fl>(match[5]);
-		fl cap = boost::lexical_cast<fl>(match[6]);
-		fl c = boost::lexical_cast<fl>(match[7]);
+		fl d0 = boost::lexical_cast<fl>(match[6]);
+		fl cap = boost::lexical_cast<fl>(match[7]);
+		fl c = boost::lexical_cast<fl>(match[8]);
 		if(vi == 4.0 && vj == 8)
-			return new atom_type_vdw<4,8>(n1,n2,s, cap, c);
+			return new atom_type_vdw<4,8>(n1,n2,s,d0, cap, c);
 		else if(vi == 6 && vj == 12)
-			return new atom_type_vdw<6,12>(n1,n2,s, cap, c);
+			return new atom_type_vdw<6,12>(n1,n2,s,d0, cap, c);
 		else
 			throw scoring_function_error(desc,"Unsupported LJ exponents: try <4,8> or <6,12>.");
 	}
