@@ -61,11 +61,7 @@ const sz AD_TYPE_Fe   = 17;
 const sz AD_TYPE_Cl   = 18;
 const sz AD_TYPE_Br   = 19;
 const sz AD_TYPE_METAL = 20; //generic metal, not actually part of autodock
-const sz AD_TYPE_NZA   = 21;
-const sz AD_TYPE_OZA   = 22;
-const sz AD_TYPE_TZ    = 23;
-const sz AD_TYPE_SZA   = 24;
-const sz AD_TYPE_SIZE = 25;
+const sz AD_TYPE_SIZE = 21;
 
 // X-Score
 const sz XS_TYPE_C_H   =  0;
@@ -104,16 +100,12 @@ enum type {
 	NitrogenXSDonor, //N_N_N_D,
 	NitrogenXSDonorAcceptor, //N_NA_N_DA, also an autodock acceptor
 	NitrogenXSAcceptor, //N_NA_N_A, also considered an acceptor by autodock
-	NitrogenZinc, //N_NA_N_A, also considered an acceptor by autodock
-	NitrogenZincAcceptor, //N_NA_N_A, also considered an acceptor by autodock
 	Oxygen, //O_O_O_P,
 	OxygenXSDonor, //O_O_O_D,
 	OxygenXSDonorAcceptor, //O_OA_O_DA, also an autodock acceptor
 	OxygenXSAcceptor, //O_OA_O_A, also an autodock acceptor
-	OxygenZincAcceptor,
 	Sulfur, //S_S_S_P,
 	SulfurAcceptor, //S_SA_S_P, XS doesn't do sulfur acceptors
-	SulfurZincAcceptor, //S_SA_S_P, XS doesn't do sulfur acceptors
 	Phosphorus, //P_P_P_P,
 	Fluorine, //F_F_F_H,
 	Chlorine, //Cl_Cl_Cl_H,
@@ -121,7 +113,7 @@ enum type {
 	Iodine, //I_I_I_H,
 	Magnesium, //Met_Mg_Met_D,
 	Manganese, //Met_Mn_Met_D,
-	Zinc, // Met_Zn_Met_D,
+	Zinc, //N_NA_N_A, also considered an acceptor by autodock
 	ZincDummy, //N_NA_N_A, also considered an acceptor by autodock
 	Calcium, //Met_Ca_Met_D,
 	Iron, //Met_Fe_Met_D,
@@ -177,8 +169,6 @@ const info default_data[NumTypes] = { //el, ad, xs
 				"NA",	1.750000,	0.160000,	-0.001620,	22.449300,	0.750000,	1.800000,	false,	true,	true,	true},
 		{NitrogenXSAcceptor, EL_TYPE_N, AD_TYPE_NA, XS_TYPE_N_A,"NitrogenXSAcceptor",
 				"NA",	1.750000,	0.160000,	-0.001620,	22.449300,	0.750000,	1.800000,	false,	false,	true,	true},
-		{NitrogenZincAcceptor, EL_TYPE_N, AD_TYPE_NZA, XS_TYPE_N_A,"NitrogenZincAcceptor",
-				"NZA",	1.750000,	0.160000,	-0.001620,	22.449300,	0.750000,	1.800000,	false,	false,	true,	true},
 		{Oxygen, EL_TYPE_O, AD_TYPE_O, XS_TYPE_O_P,"Oxygen",
 				"O",	1.600000,	0.200000,	-0.002510,	17.157300,	0.730000,	1.700000,	false,	false,	false,	true},
 		{OxygenXSDonor, EL_TYPE_O, AD_TYPE_O, XS_TYPE_O_D,"OxygenXSDonor",
@@ -187,14 +177,10 @@ const info default_data[NumTypes] = { //el, ad, xs
 				"OA",	1.600000,	0.200000,	-0.002510,	17.157300,	0.730000,	1.700000,	false,	true,	true,	true},
 		{OxygenXSAcceptor, EL_TYPE_O, AD_TYPE_OA, XS_TYPE_O_A,"OxygenXSAcceptor",
 				"OA",	1.600000,	0.200000,	-0.002510,	17.157300,	0.730000,	1.700000,	false,	false,	true,	true},
-		{OxygenZincAcceptor, EL_TYPE_O, AD_TYPE_OZA, XS_TYPE_O_A,"OxygenZincAcceptor",
-				"OZA",	1.600000,	0.200000,	-0.002510,	17.157300,	0.730000,	1.700000,	false,	false,	true,	true},
 		{Sulfur, EL_TYPE_S, AD_TYPE_S, XS_TYPE_S_P,"Sulfur",
 				"S",	2.000000,	0.200000,	-0.002140,	33.510300,	1.020000,	2.000000,	false,	false,	false,	true},
 		{SulfurAcceptor, EL_TYPE_S, AD_TYPE_SA, XS_TYPE_S_P,"SulfurAcceptor",
 				"SA",	2.000000,	0.200000,	-0.002140,	33.510300,	1.020000,	2.000000,	false,	false,	false,	true},
-		{SulfurZincAcceptor, EL_TYPE_S, AD_TYPE_SZA, XS_TYPE_S_P,"SulfurZincAcceptor",
-				"SZA",	2.000000,	0.200000,	-0.002140,	33.510300,	1.020000,	2.000000,	false,	false,	false,	true},
 		{Phosphorus, EL_TYPE_P, AD_TYPE_P, XS_TYPE_P_P,"Phosphorus",
 				"P",	2.100000,	0.200000,	-0.001100,	38.792400,	1.060000,	2.100000,	false,	false,	false,	true},
 		{Fluorine, EL_TYPE_F, AD_TYPE_F, XS_TYPE_F_H,"Fluorine",
@@ -211,7 +197,7 @@ const info default_data[NumTypes] = { //el, ad, xs
 				"Mn",	0.650000,	0.875000,	-0.001100,	2.140000,	1.390000,	1.200000,	false,	true,	false,	true},
 		{Zinc, EL_TYPE_Met, AD_TYPE_Zn, XS_TYPE_Met_D,"Zinc",
 				"Zn",	0.740000,	0.550000,	-0.001100,	1.700000,	1.310000,	1.200000,	false,	true,	false,	true},
-		{ZincDummy, EL_TYPE_Met, AD_TYPE_TZ, XS_TYPE_Met_D,"ZincDummy",
+		{ZincDummy, EL_TYPE_Met, AD_TYPE_Zn, XS_TYPE_Met_D,"ZincDummy",
 				"TZ",	0.740000,	0.550000,	-0.001100,	1.700000,	1.310000,	1.200000,	false,	true,	false,	true},
 		{Calcium, EL_TYPE_Met, AD_TYPE_Ca, XS_TYPE_Met_D,"Calcium",
 				"Ca",	0.990000,	0.550000,	-0.001100,	2.770000,	1.740000,	1.200000,	false,	true,	false,	true},
